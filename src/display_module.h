@@ -1,12 +1,13 @@
 #ifndef DISPLAY_MODULE_H
 #define DISPLAY_MODULE_H
 
-#include <TFT_eSPI.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_ST7735.h>
+#include <SPI.h>
 
-// 初始化螢幕
+// 宣告全域物件
+extern Adafruit_ST7735 tft;
+
 void initDisplay();
-
-// 更新顯示畫面的函式 (傳入想要顯示的數值)
-void updateUI(int value, const char* status);
 
 #endif

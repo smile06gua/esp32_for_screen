@@ -1,38 +1,26 @@
 #include "display_module.h"
 
-TFT_eSPI tft = TFT_eSPI();
-TFT_eSprite canvas = TFT_eSprite(&tft);
+// 直接定義腳位
+#define TFT_CS   10
+#define TFT_DC   14
+#define TFT_MOSI 11
+#define TFT_SCLK 12
+#define TFT_RST  21
+
+// 初始化物件 (軟體 SPI 方式最保險，若要追求速度再改硬體 SPI)
+Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
 
 void initDisplay() {
-    tft.init();
-    tft.setRotation(0);
-    tft.fillScreen(TFT_BLACK);
+    Serial.println(">>> Adafruit ST7735 Init Start...");
     
-    // 建立 128x128 畫布
-    canvas.createSprite(128, 128);
-    canvas.setTextDatum(MC_DATUM); 
-}
-
-void updateUI(int value, const char* status) {
-    canvas.fillSprite(TFT_BLACK); // 清除畫布
+    // 初始化 1.44 吋螢幕 (常見的綠標或紅標)
+    tft.initR(INITR_144GREENTAB); 
     
-    // 畫標題
-    canvas.setTextColor(TFT_GOLD);
-    canvas.drawString("SYSTEM INFO", 64, 15, 2);
+    tft.fillScreen(ST77XX_BLACK);
+    tft.setCursor(0, 0);
+    tft.setTextColor(ST77XX_WHITE);
+    tft.setTextSize(1);
+    tft.println("Hello ESP32-S3!");
     
-    // 畫中間的大數字
-    canvas.setTextSize(3);
-    canvas.setTextColor(TFT_WHITE);
-    canvas.drawNumber(value, 64, 64);
-    
-    // 畫底部的狀態文字
-    canvas.setTextSize(1);
-    canvas.setTextColor(TFT_GREEN);
-    canvas.drawString(status, 64, 110);
-    
-    // 畫外框
-    canvas.drawRect(0, 0, 128, 128, TFT_BLUE);
-
-    // 將畫布噴到螢幕
-    canvas.pushSprite(0, 0);
+    Serial.println(">>> Display Ready!");
 }
